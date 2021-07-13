@@ -1,6 +1,5 @@
 package com.konara.plugin.element;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 public class Group {

@@ -8,6 +8,7 @@ import net.mamoe.mirai.utils.BotConfiguration;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 public final class SpigotQQ extends JavaPlugin {
     private static final long QQNUM = 1295874819L;
@@ -16,12 +17,11 @@ public final class SpigotQQ extends JavaPlugin {
     static Bot bot = BotFactory.INSTANCE.newBot(QQNUM, QQPWD, new BotConfiguration() {{
         fileBasedDeviceInfo();
     }});
-    Thread thread=new Thread(new Runnable(){
-        public void run(){
-            EventChannel<BotEvent> channel = bot.getEventChannel();
-            bot.login();
-            channel.registerListenerHost(new QQEventHandlers());
-        }});
+    Thread thread=new Thread(() -> {
+        EventChannel<BotEvent> channel = bot.getEventChannel();
+        bot.login();
+        channel.registerListenerHost(new QQEventHandlers());
+    });
     @Override
     public void onEnable() {
         // Plugin startup logic
@@ -34,10 +34,10 @@ public final class SpigotQQ extends JavaPlugin {
         // Plugin shutdown logic
     }
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, Command cmd, @NotNull String label, @NotNull String[] args) {
         if (cmd.getName().equalsIgnoreCase("restartbot")) {
             getLogger().info("Restarting.........");
-            thread.stop();
+            //thread.stop();
             bot.login();
             return true;
         } //如果以上内容成功执行，则返回true
