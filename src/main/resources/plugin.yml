@@ -1,0 +1,15 @@
+name: SpigotQQ
+version: @version@
+main: com.konara.plugin.SpigotQQ
+api-version: 1.16
+prefix: ChatSync
+authors: [Konara]
+description: nothing.......
+website: konara.moe
+
+commands:
+  restartbot:
+    description: To restart the QQ bot.
+    usage: /restartbot
+    permission: SpigotQQ.restartbot
+    permission-message: You don't have <permission>
