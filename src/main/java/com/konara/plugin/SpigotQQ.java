@@ -9,12 +9,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.IOException;
-
 public final class SpigotQQ extends JavaPlugin {
     private static final long QQNUM = 1295874819L;
     private static final String QQPWD = "CaiYueXin456";
+    public static RealName realName = new RealName();
     static Bot bot = BotFactory.INSTANCE.newBot(QQNUM, QQPWD, new BotConfiguration() {{
         fileBasedDeviceInfo();
     }});
