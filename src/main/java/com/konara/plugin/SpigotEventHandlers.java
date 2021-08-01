@@ -10,7 +10,7 @@ public class SpigotEventHandlers implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e){
-        if(e.getMessage().charAt(0) == '!')
+        if(e.getMessage().charAt(0) == '!'||e.getMessage().charAt(0) == '！')
             Objects.requireNonNull(SpigotQQ.bot.getGroup(849940001L)).sendMessage("<"+e.getPlayer().getDisplayName()+"> "+e.getMessage().substring(1));
     }
 }

@@ -8,8 +8,8 @@ description: nothing.......
 website: konara.moe
 
 commands:
-  restartbot:
-    description: To restart the QQ bot.
-    usage: /restartbot
-    permission: SpigotQQ.restartbot
+  QQbot:
+    description: Basic Command.
+    usage: WRONG
+    permission: spigotqq.basic
     permission-message: You don't have <permission>
