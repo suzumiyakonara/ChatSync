@@ -7,7 +7,7 @@ plugins {
 }
 
 group = 'moe.konara'
-version = '1.2.6'
+version = '1.2.7'
 
 shadowJar {
     archiveBaseName.set('SpigotQQ')

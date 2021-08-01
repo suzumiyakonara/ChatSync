@@ -76,7 +76,8 @@ public class Utils {
             e.printStackTrace();
         }
         if(new File(ConfigPath+"/PlayerTitle.db").exists())
-            System.out.println(new File(ConfigPath+"/PlayerTitle.db").delete()?"清除缓存成功":"清除缓存失败");
+            if(!new File(ConfigPath+"/PlayerTitle.db").delete())
+                System.out.println("清除缓存失败");
         try {
             Files.copy(new File("./plugins/PlayerTitle" + "/PlayerTitle.db").toPath(),new File(ConfigPath+"/PlayerTitle.db").toPath());
         } catch (IOException e) {
@@ -89,7 +90,6 @@ public class Utils {
             statement = connection.createStatement();
             sqlTab ="PRAGMA table_info(title_player)";
             being = statement.executeQuery(sqlTab);
-            System.out.println("Opened database successfully");
         } catch (Exception throwables) {
             throwables.printStackTrace();
         }

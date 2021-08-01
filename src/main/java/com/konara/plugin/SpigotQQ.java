@@ -6,20 +6,20 @@ import net.mamoe.mirai.event.EventChannel;
 import net.mamoe.mirai.event.events.BotEvent;
 import net.mamoe.mirai.utils.BotConfiguration;
 import org.bukkit.Bukkit;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.*;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 import static com.konara.plugin.Utils.readColorConfig;
 
 public final class SpigotQQ extends JavaPlugin {
-    private static final long QQNUM = 0000000000L;
+    private static final long QQNUM = 000000L;
     private static final String QQPWD = "";
     public static String ConfigPath="./plugins/Spigot-QQ/";
     static Statement statement=null;
@@ -27,6 +27,7 @@ public final class SpigotQQ extends JavaPlugin {
     static String sqlTab ;
     static ResultSet being ;
     static Bot bot;
+    static ConsoleCommandSender console;
     Thread thread=new Thread(() -> {
         EventChannel<BotEvent> channel = bot.getEventChannel();
         bot.login();
@@ -36,6 +37,7 @@ public final class SpigotQQ extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
+        console = Bukkit.getServer().getConsoleSender();
         if(!new File(ConfigPath).exists())
             System.out.println(new File(ConfigPath).mkdirs()?"创建成功":"创建失败");
         bot = BotFactory.INSTANCE.newBot(QQNUM, QQPWD, new BotConfiguration() {{
