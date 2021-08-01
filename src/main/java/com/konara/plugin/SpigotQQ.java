@@ -19,7 +19,7 @@ import java.util.Objects;
 import static com.konara.plugin.Utils.readColorConfig;
 
 public final class SpigotQQ extends JavaPlugin {
-    private static final long QQNUM = 000000L;
+    private static final long QQNUM = 00000000L;
     private static final String QQPWD = "";
     public static String ConfigPath="./plugins/Spigot-QQ/";
     static Statement statement=null;

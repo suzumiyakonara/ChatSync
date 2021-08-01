@@ -51,9 +51,11 @@ public class QQEventHandlers extends SimpleListenerHost {
                 String Prefix = Utils.getPrefix(event.getSender().getId());
                 String PlayerName=Utils.getPlayerName(event.getSender().getId());
                 if(PlayerName!=null)
-                    PlayerName="<"+PlayerName+"> ";
+                    PlayerName=" <"+PlayerName+"> ";
                 else
                     PlayerName="<"+event.getSenderName()+"> ";
+                if(Prefix==null)
+                    Prefix="";
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     player.sendMessage(Prefix + PlayerName + event.getMessage().contentToString());
                 }
