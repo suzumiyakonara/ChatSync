@@ -1,6 +1,6 @@
 name: SpigotQQ
 version: @version@
-main: com.konara.plugin.SpigotQQ
+main: moe.konara.plugin.SpigotQQ
 api-version: 1.16
 prefix: ChatSync
 authors: [Konara]
@@ -13,3 +13,8 @@ commands:
     usage: WRONG
     permission: spigotqq.basic
     permission-message: You don't have <permission>
+
+permissions:
+  spigotqq.basic:
+    description: Basic.
+    default:  true

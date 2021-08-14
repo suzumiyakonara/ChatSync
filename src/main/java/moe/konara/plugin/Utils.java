@@ -1,4 +1,4 @@
-package com.konara.plugin;
+package moe.konara.plugin;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -15,7 +15,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.konara.plugin.SpigotQQ.*;
+import static moe.konara.plugin.SpigotQQ.*;
 
 public class Utils {
     public static boolean update(){
@@ -28,14 +28,18 @@ public class Utils {
                 String Prefix = "§f[ §7玩家 §f]";
                 try {
                     ResultSet rs = statement.executeQuery("SELECT * FROM \"title_player\" where player_name = '" + path.toLowerCase() + "';");
-                    if (rs.next()) {
-                        Prefix = rs.getString("title_name");
+                    while(rs.next())
+                    {
+                        if(rs.getInt("is_use")==1)
+                            Prefix = rs.getString("title_name");
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
                     return false;
                 }
-                System.out.println(addCorrespondingData(path,QQ,Prefix,true)?path+"更新成功":path+"更新失败");
+                Prefix=translateColor(Prefix);
+                if(!addCorrespondingData(path,QQ,Prefix,true))
+                    System.out.println(path+"更新失败");
             }
         return true;
     }
@@ -140,6 +144,73 @@ public class Utils {
             }
         }
         return null;
+    }
+
+    public static boolean isShouting(String target){
+        File CorrespondingFile = new File(ConfigPath+"ShoutingData.yml");
+        if(!CorrespondingFile.exists()) {
+            try {
+                System.out.println(CorrespondingFile.createNewFile()?"配置文件创建成功":"配置文件创建失败");
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        YamlConfiguration yc = new YamlConfiguration();
+        try {
+            yc.load(CorrespondingFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        if(yc.getConfigurationSection("ShoutingData")==null)
+            yc.createSection("ShoutingData");
+        ConfigurationSection section = Objects.requireNonNull(yc).getConfigurationSection("ShoutingData");
+        Set<String> Players = Objects.requireNonNull(section).getKeys(false);
+        for(String name : Players)
+        {
+            if(name.equalsIgnoreCase(target))
+                if(Objects.equals(Objects.requireNonNull(section.getConfigurationSection(name)).getString("Shout"), "true"))
+                {
+                    return true;
+                }else if(Objects.equals(Objects.requireNonNull(section.getConfigurationSection(name)).getString("Shout"), "false")){
+                    return false;
+                }
+        }
+        return false;
+    }
+
+    public static boolean setShouting(boolean shouting,String sender){
+        File CorrespondingFile = new File(ConfigPath+"ShoutingData.yml");
+        if(!CorrespondingFile.exists()) {
+            try {
+                System.out.println(CorrespondingFile.createNewFile()?"配置文件创建成功":"配置文件创建失败");
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        YamlConfiguration yc = new YamlConfiguration();
+        try {
+            yc.load(CorrespondingFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        if(yc.getConfigurationSection("ShoutingData")==null)
+            yc.createSection("ShoutingData");
+        ConfigurationSection section = Objects.requireNonNull(yc).getConfigurationSection("ShoutingData");
+        Set<String> Players = Objects.requireNonNull(section).getKeys(false);
+        Map<String, Object> Player = new HashMap<>();
+        Player.put("Shout", shouting?"true":"false");
+        Objects.requireNonNull(section).createSection(sender,Player);
+        try {
+            yc.save(ConfigPath+"ShoutingData.yml");
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public static Map<String, Integer> readColorConfig(){

@@ -1,4 +1,4 @@
-package com.konara.plugin;
+package moe.konara.plugin;
 
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactory;
@@ -7,6 +7,7 @@ import net.mamoe.mirai.event.events.BotEvent;
 import net.mamoe.mirai.utils.BotConfiguration;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -16,11 +17,9 @@ import java.sql.*;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.konara.plugin.Utils.readColorConfig;
-
 public final class SpigotQQ extends JavaPlugin {
-    private static final long QQNUM = 00000000L;
-    private static final String QQPWD = "";
+    private static final long QQNUM = 0000000000L;
+    private static final String QQPWD = "password";
     public static String ConfigPath="./plugins/Spigot-QQ/";
     static Statement statement=null;
     static Connection connection = null;
@@ -28,6 +27,8 @@ public final class SpigotQQ extends JavaPlugin {
     static ResultSet being ;
     static Bot bot;
     static ConsoleCommandSender console;
+    static Plugin plugin;
+    static double tps;
     Thread thread=new Thread(() -> {
         EventChannel<BotEvent> channel = bot.getEventChannel();
         bot.login();
@@ -37,13 +38,14 @@ public final class SpigotQQ extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
-        console = Bukkit.getServer().getConsoleSender();
+        plugin=this;
+        console = getServer().getConsoleSender();
         if(!new File(ConfigPath).exists())
             System.out.println(new File(ConfigPath).mkdirs()?"创建成功":"创建失败");
         bot = BotFactory.INSTANCE.newBot(QQNUM, QQPWD, new BotConfiguration() {{
             fileBasedDeviceInfo(ConfigPath+"/device.json");
         }});
-        CorrespondingColor = readColorConfig();
+        CorrespondingColor = Utils.readColorConfig();
         thread.start();
         Objects.requireNonNull(Bukkit.getPluginCommand("QQbot")).setExecutor(new CommandHandler());
         Objects.requireNonNull(Bukkit.getPluginCommand("QQbot")).setTabCompleter(new CommandHandler());
@@ -65,6 +67,28 @@ public final class SpigotQQ extends JavaPlugin {
             throwables.printStackTrace();
         }
         getServer().getPluginManager().registerEvents(new SpigotEventHandlers(),this);
+        Bukkit.getServer().getScheduler().runTaskTimer(this, new Runnable(){
+
+            long secstart;
+            long secend;
+
+            int ticks;
+
+            @Override
+            public void run(){
+                secstart = (System.currentTimeMillis() / 1000);
+
+                if(secstart == secend){
+                    ticks++;
+                }else{
+                    secend = secstart;
+                    tps = (tps == 0) ? ticks : ((tps + ticks) / 2);
+                    //System.out.println("(" + variables.tps + ":" + ticks + ")" + "/" + "2" + " = " + ((variables.tps + ticks) / 2));
+                    ticks = 1;
+                }
+            }
+
+        }, 0, 1);
     }
 
     @Override

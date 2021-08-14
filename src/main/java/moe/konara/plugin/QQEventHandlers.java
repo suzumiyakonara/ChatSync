@@ -1,4 +1,4 @@
-package com.konara.plugin;
+package moe.konara.plugin;
 
 import kotlin.coroutines.CoroutineContext;
 import net.mamoe.mirai.event.EventHandler;
@@ -8,10 +8,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.text.NumberFormat;
+
 public class QQEventHandlers extends SimpleListenerHost {
     @Override
     public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception){
-        System.out.println(exception.getMessage());
+        exception.printStackTrace();
     }
     @EventHandler
     public void onGroupMessage(@NotNull GroupMessageEvent event) throws Exception {
@@ -34,20 +36,37 @@ public class QQEventHandlers extends SimpleListenerHost {
                 if(Command.length()>="wladd".length())
                     if(Command.substring(0,"wladd".length()).equalsIgnoreCase("wladd"))
                     {
-                        long qqnum=event.getSender().getId();
-                        if(qqnum==2803530989L||qqnum==2082152212L||qqnum==1842105028L||qqnum==2962672241L)
-                            Bukkit.dispatchCommand(SpigotQQ.console, "wl add "+ Command.substring("wladd".length()));
+                        if(event.getSender().getPermission().getLevel()>=1) {
+                            try{
+                                Bukkit.getScheduler().runTaskLater(SpigotQQ.plugin, ()->Bukkit.dispatchCommand(SpigotQQ.console,"whitelist add " + Command.substring("wladd".length())), 0L);
+                                event.getSubject().sendMessage("添加成功");
+                            }catch(Exception e)
+                            {
+                                event.getSubject().sendMessage(e.getMessage());
+                            }
+                        }
                         else
                             event.getGroup().sendMessage("权限不足");
                     }
                 if(Command.length()>="help".length())
                     if(Command.substring(0,"help".length()).equalsIgnoreCase("help"))
                     {
-                        event.getGroup().sendMessage("&list - 获取玩家列表\n&wladd [游戏名] - 添加到白名单(需权限)");
+                        event.getGroup().sendMessage(
+                                "&list - 获取玩家列表\n" +
+                                "&wladd [游戏名] - 添加到白名单(需权限)\n" +
+                                        "&tps获取服务器tps");
+                    }
+                if(Command.length()>="tps".length())
+                    if(Command.substring(0,"tps".length()).equalsIgnoreCase("tps"))
+                    {
+                        NumberFormat temp = NumberFormat.getNumberInstance();
+                        temp.setMaximumFractionDigits(2);
+                        event.getGroup().sendMessage("tps:"+temp.format(SpigotQQ.tps));
                     }
             }
             else
             {
+                Utils.update();
                 String Prefix = Utils.getPrefix(event.getSender().getId());
                 String PlayerName=Utils.getPlayerName(event.getSender().getId());
                 if(PlayerName!=null)
