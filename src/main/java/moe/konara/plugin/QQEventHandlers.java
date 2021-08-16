@@ -27,34 +27,53 @@ public class QQEventHandlers extends SimpleListenerHost {
                     {
                         StringBuilder PlayerList= new StringBuilder("当前在线的玩家:\n");
                         for (Player player : Bukkit.getOnlinePlayers()) {
-                            PlayerList.append(player.getName()).append(",");
+                            PlayerList.append(player.getName()).append("\n");
                         }
                         if(PlayerList.toString().equals("当前在线的玩家:\n"))
-                            PlayerList=new StringBuilder("没有玩家在线 ");
+                            PlayerList=new StringBuilder("鬼服欢迎您 ");
                         event.getGroup().sendMessage(PlayerList.substring(0,PlayerList.length()-1));
                     }
-                if(Command.length()>="wladd".length())
-                    if(Command.substring(0,"wladd".length()).equalsIgnoreCase("wladd"))
-                    {
-                        if(event.getSender().getPermission().getLevel()>=1) {
-                            try{
-                                Bukkit.getScheduler().runTaskLater(SpigotQQ.plugin, ()->Bukkit.dispatchCommand(SpigotQQ.console,"whitelist add " + Command.substring("wladd".length())), 0L);
+                if(Command.length()>="wladd".length()) {
+                    if (Command.substring(0, "wladd".length()).equalsIgnoreCase("wladd")) {
+                        if (event.getSender().getPermission().getLevel() >= 1) {
+                            try {
+                                Bukkit.getScheduler().runTaskLater(SpigotQQ.plugin, () -> Bukkit.dispatchCommand(SpigotQQ.console, "wladd " + Command.substring("wladd".length())), 0L);
                                 event.getSubject().sendMessage("添加成功");
-                            }catch(Exception e)
-                            {
+                            } catch (Exception e) {
                                 event.getSubject().sendMessage(e.getMessage());
                             }
-                        }
-                        else
+                        } else
                             event.getGroup().sendMessage("权限不足");
                     }
+                    if (Command.substring(0, "wldel".length()).equalsIgnoreCase("wldel")) {
+                        if (event.getSender().getPermission().getLevel() >= 1) {
+                            try {
+                                Bukkit.getScheduler().runTaskLater(SpigotQQ.plugin, () -> Bukkit.dispatchCommand(SpigotQQ.console, "wldel " + Command.substring("wldel".length())), 0L);
+                                event.getSubject().sendMessage("删除成功");
+                            } catch (Exception e) {
+                                event.getSubject().sendMessage(e.getMessage());
+                            }
+                        } else
+                            event.getGroup().sendMessage("权限不足");
+                    }
+                }
                 if(Command.length()>="help".length())
                     if(Command.substring(0,"help".length()).equalsIgnoreCase("help"))
                     {
                         event.getGroup().sendMessage(
                                 "&list - 获取玩家列表\n" +
-                                "&wladd [游戏名] - 添加到白名单(需权限)\n" +
-                                        "&tps获取服务器tps");
+                                   "&tps - 获取服务器tps\n" +
+                                   "&adminhelp - 管理命令"
+                        );
+                    }
+                if(Command.length()>="adminhelp".length())
+                    if(Command.substring(0,"adminhelp".length()).equalsIgnoreCase("adminhelp"))
+                    {
+                        event.getGroup().sendMessage(
+                                "&wladd [游戏名] - 添加到白名单\n" +
+                                   "&wldel [游戏名] - 删除白名单\n" +
+                                   "&kick [游戏名] - 踢人"
+                        );
                     }
                 if(Command.length()>="tps".length())
                     if(Command.substring(0,"tps".length()).equalsIgnoreCase("tps"))
@@ -62,6 +81,19 @@ public class QQEventHandlers extends SimpleListenerHost {
                         NumberFormat temp = NumberFormat.getNumberInstance();
                         temp.setMaximumFractionDigits(2);
                         event.getGroup().sendMessage("tps:"+temp.format(SpigotQQ.tps));
+                    }
+                if(Command.length()>="kick".length())
+                    if(Command.substring(0,"kick".length()).equalsIgnoreCase("kick"))
+                    {
+                        if (event.getSender().getPermission().getLevel() >= 1) {
+                            try {
+                                Bukkit.getScheduler().runTaskLater(SpigotQQ.plugin, () -> Bukkit.dispatchCommand(SpigotQQ.console, "kick " + Command.substring("kick".length())), 0L);
+                                event.getSubject().sendMessage("完事.");
+                            } catch (Exception e) {
+                                event.getSubject().sendMessage(e.getMessage());
+                            }
+                        } else
+                            event.getGroup().sendMessage("权限不足");
                     }
             }
             else
