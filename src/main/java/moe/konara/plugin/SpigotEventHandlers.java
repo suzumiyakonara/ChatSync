@@ -1,18 +1,14 @@
 package moe.konara.plugin;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Creeper;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
 
 import java.text.NumberFormat;
 import java.util.Objects;
@@ -23,24 +19,25 @@ public class SpigotEventHandlers implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e){
-        if(isShouting(e.getPlayer().getDisplayName()))
+        if(isShouting(e.getPlayer().getName()))
             Objects.requireNonNull(SpigotQQ.bot.getGroup(849940001L)).sendMessage("<"+e.getPlayer().getName()+"> "+e.getMessage());
         else if(e.getMessage().charAt(0) == '!'||e.getMessage().charAt(0) == '！')
-            Objects.requireNonNull(SpigotQQ.bot.getGroup(849940001L)).sendMessage("<"+e.getPlayer().getDisplayName()+"> "+e.getMessage().substring(1));
+            Objects.requireNonNull(SpigotQQ.bot.getGroup(849940001L)).sendMessage("<"+e.getPlayer().getName()+"> "+e.getMessage().substring(1));
     }
 
     @EventHandler
     public void onDig(BlockBreakEvent event){
-        Score realDigScore = SpigotQQ.realDig.getScore(event.getPlayer().getName());
-        Score digScore = SpigotQQ.dig.getScore(event.getPlayer().getName());
-        realDigScore.setScore(realDigScore.getScore()+1);
-        digScore.setScore((int)Math.floor(realDigScore.getScore()/1000F));
-        if(realDigScore.getScore()==1)
-        {
-            System.out.println(event.getPlayer().getName()+":"+realDigScore.getScore()+"开启了挖掘计分板");
-        }
-        if(SpigotQQ.DebugPlayer.contains(event.getPlayer().getName())&&(realDigScore.getScore()%10)==0){
-            event.getPlayer().sendMessage("你已经挖掘了"+realDigScore.getScore()+"个方块");
+        if(!event.getBlock().isEmpty()) {
+            Score realDigScore = SpigotQQ.realDig.getScore(event.getPlayer().getName());
+            Score digScore = SpigotQQ.dig.getScore(event.getPlayer().getName());
+            realDigScore.setScore(realDigScore.getScore() + 1);
+            digScore.setScore((int) Math.floor(realDigScore.getScore() / 1000F));
+            if (realDigScore.getScore() == 1) {
+                System.out.println(event.getPlayer().getName() + ":" + realDigScore.getScore() + "开启了挖掘计分板");
+            }
+            if (SpigotQQ.DebugPlayer.contains(event.getPlayer().getName()) && (realDigScore.getScore() % 50) == 0) {
+                event.getPlayer().sendMessage("你已经挖掘了" + realDigScore.getScore() + "个方块");
+            }
         }
     }
 

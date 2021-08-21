@@ -120,7 +120,6 @@ public final class SpigotQQ extends JavaPlugin {
                 }else{
                     secend = secstart;
                     tps = (tps == 0) ? ticks : ((tps + ticks) / 2);
-                    //System.out.println("(" + variables.tps + ":" + ticks + ")" + "/" + "2" + " = " + ((variables.tps + ticks) / 2));
                     ticks = 1;
                 }
             }
