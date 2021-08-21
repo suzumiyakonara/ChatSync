@@ -3,7 +3,7 @@ version: @version@
 main: moe.konara.plugin.SpigotQQ
 api-version: 1.17
 prefix: ChatSync
-authors: [Konara]
+authors: [ Konara ]
 description: nothing.......
 website: konara.moe
 
