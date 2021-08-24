@@ -151,7 +151,7 @@ public class QQEventHandlers extends SimpleListenerHost {
                             player.sendTitle(null, PlayerName + " \u63d0\u5230\u4e86\u4f60", 10, 40, 20);
                         }
                     } else if(element instanceof Face) {
-                        switch(((Face)element).getId()) {
+                        switch(((Face) element).getId()) {
                             case Face.SHAN_DIAN:
                                 message.append("\u26a1");    //⚡
                                 break;
@@ -172,6 +172,20 @@ public class QQEventHandlers extends SimpleListenerHost {
                                 break;
                             case Face.SHOU_QIANG:
                                 message.append("\uD83C\uDFF9"); //🏹
+                        }
+                    } else if(element instanceof LightApp || element instanceof ServiceMessage) {
+                        message.append("[\u5361\u7247\u6d88\u606f]\u8bf7\u5728\u0051\u0051\u7fa4\u4e2d\u67e5\u770b\u3002");
+                    } else if(element instanceof MessageOrigin) {
+                        switch(((MessageOrigin) element).getKind()) {
+                            case LONG:
+                                message.append("[\u957f\u6d88\u606f\u6d88\u606f]\u8bf7\u5728\u0051\u0051\u7fa4\u4e2d\u67e5\u770b\u3002");
+                                break;
+                            case FORWARD:
+                                message.append("[\u5408\u5e76\u8f6c\u53d1\u6d88\u606f]\u8bf7\u5728\u0051\u0051\u7fa4\u4e2d\u67e5\u770b\u3002");
+                                break;
+                            case MUSIC_SHARE:
+                                message.append("[\u97f3\u4e50\u5206\u4eab\u6d88\u606f]\u8bf7\u5728\u0051\u0051\u7fa4\u4e2d\u67e5\u770b\u3002");
+                                break;
                         }
                     } else {
                         message.append(element.contentToString());
