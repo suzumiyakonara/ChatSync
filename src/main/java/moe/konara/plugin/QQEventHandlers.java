@@ -4,7 +4,9 @@ import kotlin.coroutines.CoroutineContext;
 import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
+import net.mamoe.mirai.message.data.*;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -100,6 +102,9 @@ public class QQEventHandlers extends SimpleListenerHost {
                 }
             } else {
                 Utils.update();
+                if("".equals(event.getMessage().contentToString()) || event.getMessage().contentToString().matches("[ \n]+")) {
+                    return;
+                }
                 String Prefix = Utils.getPrefix(event.getSender().getId());
                 String PlayerName = Utils.getPlayerName(event.getSender().getId());
                 if(PlayerName != null) {
@@ -110,8 +115,70 @@ public class QQEventHandlers extends SimpleListenerHost {
                 if(Prefix == null) {
                     Prefix = "";
                 }
+                MessageChain messageChain = event.getMessage();
+                StringBuilder message = new StringBuilder();
+                int i = 0;
+                for(SingleMessage element : messageChain) {
+                    i++;
+                    //消息元素判断
+                    if(element instanceof At) {
+                        String target = Utils.getPlayerName(((At) element).getTarget());
+                        if(target == null) {
+                            message.append(((At) element).getDisplay(event.getGroup()));
+                        } else {
+                            message.append("@").append(target);
+                            Player targetPlayer = SpigotQQ.server.getPlayer(target);
+                            if(targetPlayer == null) {
+                                return;
+                            } else {
+                                targetPlayer.sendMessage("§l§3[MC Mail]§r \u0051\u0051\u7fa4\u91cc " + Prefix + PlayerName + " \u7684\u6d88\u606f\u4e2d\u63d0\u53ca\u4e86\u4f60\u3002");
+                                targetPlayer.playSound(targetPlayer.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 5.0F, 1.0F);
+                                targetPlayer.sendTitle(null, PlayerName + " \u63d0\u5230\u4e86\u4f60", 10, 40, 20);
+                            }
+                        }
+                        if(messageChain.size() - i > 0) {
+                            message.append(" ");
+                        }
+
+                    } else if(element instanceof AtAll) {
+                        message.append(element.contentToString()); //@全体成员
+                        if(messageChain.size() - i > 0) {
+                            message.append(" ");
+                        }
+                        for(Player player : Bukkit.getOnlinePlayers()) {
+                            player.sendMessage("§l§3[MC Mail]§r \u0051\u0051\u7fa4\u91cc " + Prefix + PlayerName + " \u7684\u6d88\u606f\u4e2d\u63d0\u53ca\u4e86\u6240\u6709\u4eba\u3002");
+                            player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 5.0F, 1.0F);
+                            player.sendTitle(null, PlayerName + " \u63d0\u5230\u4e86\u4f60", 10, 40, 20);
+                        }
+                    } else if(element instanceof Face) {
+                        switch(((Face)element).getId()) {
+                            case Face.SHAN_DIAN:
+                                message.append("\u26a1");    //⚡
+                                break;
+                            case Face.JU_HUA:
+                                message.append("\u2744");    //❄
+                                break;
+                            case Face.AI_XIN:
+                                message.append("\u2764");    //❤
+                                break;
+                            case Face.TAI_YANG:
+                                message.append("\u2600");    //☀
+                                break;
+                            case Face.WEI_XIAO:
+                                message.append("\u263a");    //☺
+                                break;
+                            case Face.XIE_YAN_XIAO:
+                                message.append("\u263b");    //☻
+                                break;
+                            case Face.SHOU_QIANG:
+                                message.append("\uD83C\uDFF9"); //🏹
+                        }
+                    } else {
+                        message.append(element.contentToString());
+                    }
+                }
                 for(Player player : Bukkit.getOnlinePlayers()) {
-                    player.sendMessage(Prefix + PlayerName + event.getMessage().contentToString());
+                    player.sendMessage(Prefix + PlayerName + message);
                 }
             }
         }
