@@ -1,5 +1,6 @@
 package moe.konara.plugin;
 
+import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import net.md_5.bungee.api.ChatColor;
@@ -154,6 +155,12 @@ public class Utils {
             }
         }
         return null;
+    }
+
+    public static String getPrefixFromPlayerName(String playerName) {
+        YamlConfiguration yc = getYamlConfiguration();
+        ConfigurationSection section = Objects.requireNonNull(yc).getConfigurationSection("CorrespondingData");
+        return Objects.requireNonNull(section).getString(playerName + ".Prefix");
     }
 
     public static boolean isShouting(String target) {
@@ -311,7 +318,7 @@ public class Utils {
      * Analyze whether the message is a @ message and return a AtMessage.
      *
      * @param message The player chat message
-     * @return If it is not a @ message, it returns a null value, otherwise it returns a AtMessage.
+     * @return If it is not a @ message or the target player is not online, it returns a null value, otherwise it returns a AtMessage.
      */
     @Nullable
     public static AtMessage analyzeMessage(@NotNull Player player, @NotNull String message) {
@@ -319,6 +326,14 @@ public class Utils {
             return null;
         }
         String[] args = message.split("@", 1);
+        Player targetPlayer = SpigotQQ.server.getPlayer(args[0]);
+        if(targetPlayer == null) {
+            return null;
+        } else {
+            targetPlayer.sendMessage("§l§3[MC Mail]§r \u0051\u0051\u7fa4\u91cc " + getPrefixFromPlayerName(player.getDisplayName()) + player.getDisplayName() + "\u7684\u6d88\u606f\u4e2d\u63d0\u53ca\u4e86\u4f60\u3002");
+            targetPlayer.playSound(targetPlayer.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 5.0F, 1.0F);
+            targetPlayer.sendTitle(null, player.getDisplayName() + "\u63d0\u5230\u4e86\u4f60", 10, 40, 20);
+        }
         return new AtMessage(player, SpigotQQ.server.getPlayer(args[0]), args[1]);
     }
 }
