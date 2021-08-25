@@ -126,14 +126,14 @@ public class QQEventHandlers extends SimpleListenerHost {
                         if(target == null) {
                             message.append(((At) element).getDisplay(event.getGroup()));
                         } else {
-                            message.append("@").append(target);
+                            message.append("§9@").append(target).append("§r");
                             Player targetPlayer = SpigotQQ.server.getPlayer(target);
                             if(targetPlayer == null) {
                                 return;
                             } else {
-                                targetPlayer.sendMessage("§l§3[MC Mail]§r \u0051\u0051\u7fa4\u91cc " + Prefix + PlayerName + " \u7684\u6d88\u606f\u4e2d\u63d0\u53ca\u4e86\u4f60\u3002");
+                                targetPlayer.sendMessage("§l§3[MC Mail]§r \u0051\u0051\u7fa4\u91cc " + Prefix + PlayerName + "\u7684\u6d88\u606f\u4e2d\u63d0\u53ca\u4e86\u4f60\u3002");
                                 targetPlayer.playSound(targetPlayer.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 5.0F, 1.0F);
-                                targetPlayer.sendTitle(null, PlayerName + " \u63d0\u5230\u4e86\u4f60", 10, 40, 20);
+                                targetPlayer.sendTitle(null, PlayerName + "\u63d0\u5230\u4e86\u4f60", 10, 40, 20);
                             }
                         }
                         if(messageChain.size() - i > 0) {
@@ -141,14 +141,14 @@ public class QQEventHandlers extends SimpleListenerHost {
                         }
 
                     } else if(element instanceof AtAll) {
-                        message.append(element.contentToString()); //@全体成员
+                        message.append("§9@").append(element.contentToString()).append("§r"); //@全体成员
                         if(messageChain.size() - i > 0) {
                             message.append(" ");
                         }
                         for(Player player : Bukkit.getOnlinePlayers()) {
-                            player.sendMessage("§l§3[MC Mail]§r \u0051\u0051\u7fa4\u91cc " + Prefix + PlayerName + " \u7684\u6d88\u606f\u4e2d\u63d0\u53ca\u4e86\u6240\u6709\u4eba\u3002");
+                            player.sendMessage("§l§3[MC Mail]§r \u0051\u0051\u7fa4\u91cc " + Prefix + PlayerName + "\u7684\u6d88\u606f\u4e2d\u63d0\u53ca\u4e86\u6240\u6709\u4eba\u3002");
                             player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 5.0F, 1.0F);
-                            player.sendTitle(null, PlayerName + " \u63d0\u5230\u4e86\u4f60", 10, 40, 20);
+                            player.sendTitle(null, PlayerName + "\u63d0\u5230\u4e86\u4f60", 10, 40, 20);
                         }
                     } else if(element instanceof Face) {
                         switch(((Face) element).getId()) {
@@ -174,17 +174,29 @@ public class QQEventHandlers extends SimpleListenerHost {
                                 message.append("\uD83C\uDFF9"); //🏹
                         }
                     } else if(element instanceof LightApp || element instanceof ServiceMessage) {
-                        message.append("[\u5361\u7247\u6d88\u606f]\u8bf7\u5728\u0051\u0051\u7fa4\u4e2d\u67e5\u770b\u3002");
+                        message.append("§o[\u5361\u7247\u6d88\u606f]\u8bf7\u5728\u0051\u0051\u7fa4\u4e2d\u67e5\u770b\u3002§r");
+                    } else if(element instanceof QuoteReply) {
+                        String Prefix_ = Utils.getPrefix(((QuoteReply) element).getSource().getFromId());
+                        String PlayerName_ = Utils.getPlayerName(((QuoteReply) element).getSource().getFromId());
+                        if(PlayerName_ != null) {
+                            PlayerName_ = " <" + PlayerName_ + "> ";
+                        } else {
+                            PlayerName_ = "<" + event.getSenderName() + "> ";
+                        }
+                        if(Prefix_ == null) {
+                            Prefix_ = "";
+                        }
+                        message.append("§o§o[ ").append(Prefix).append(PlayerName).append("\u56de\u590d\u4e86 ").append(Prefix_).append(PlayerName_).append("\u6d88\u606f]\n§r");
                     } else if(element instanceof MessageOrigin) {
                         switch(((MessageOrigin) element).getKind()) {
                             case LONG:
-                                message.append("[\u957f\u6d88\u606f\u6d88\u606f]\u8bf7\u5728\u0051\u0051\u7fa4\u4e2d\u67e5\u770b\u3002");
+                                message.append("§o[\u957f\u6d88\u606f\u6d88\u606f]\u8bf7\u5728\u0051\u0051\u7fa4\u4e2d\u67e5\u770b\u3002§r");
                                 break;
                             case FORWARD:
-                                message.append("[\u5408\u5e76\u8f6c\u53d1\u6d88\u606f]\u8bf7\u5728\u0051\u0051\u7fa4\u4e2d\u67e5\u770b\u3002");
+                                message.append("§o[\u5408\u5e76\u8f6c\u53d1\u6d88\u606f]\u8bf7\u5728\u0051\u0051\u7fa4\u4e2d\u67e5\u770b\u3002§r");
                                 break;
                             case MUSIC_SHARE:
-                                message.append("[\u97f3\u4e50\u5206\u4eab\u6d88\u606f]\u8bf7\u5728\u0051\u0051\u7fa4\u4e2d\u67e5\u770b\u3002");
+                                message.append("§o[\u97f3\u4e50\u5206\u4eab\u6d88\u606f]\u8bf7\u5728\u0051\u0051\u7fa4\u4e2d\u67e5\u770b\u3002§r");
                                 break;
                         }
                     } else {
