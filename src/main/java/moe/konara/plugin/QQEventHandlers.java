@@ -20,7 +20,7 @@ public class QQEventHandlers extends SimpleListenerHost {
 
     @EventHandler
     public void onGroupMessage(@NotNull GroupMessageEvent event) throws Exception {
-        if(event.getGroup().getId() == 849940001) {
+        if(event.getGroup().getId() == 马赛克) {
             if(event.getMessage().contentToString().charAt(0) == '&') {
                 String Command = event.getMessage().contentToString().substring(1).replaceAll(" ", "");
                 if(Command.length() >= "list".length()) {
